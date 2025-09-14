@@ -15,7 +15,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Confirm API key is loaded
 if (!process.env.OPENAI_KEY) {
   console.error('Error: OpenAI API key is missing. Check your Heroku config vars.');
   process.exit(1);
@@ -24,7 +23,6 @@ console.log('OpenAI API Key loaded.');
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY });
 
-// OpenAI route
 app.post('/api/openai', async (req, res) => {
   try {
     const { message } = req.body;
@@ -51,11 +49,9 @@ app.post('/api/openai', async (req, res) => {
   }
 });
 
-// Serve Vite frontend
 const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
-// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
