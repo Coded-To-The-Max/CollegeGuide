@@ -1,57 +1,51 @@
-import type { RequestHandler } from 'vite';
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_AI_API_KEY
-});
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ reply: "Method not allowed" });
+  }
 
-export const POST: RequestHandler = async ({ request }) => {
   try {
-    const body = await request.json();
-    console.log('[API] Request received:', body);
+    const body = req.body;
+    console.log("[API] Request received:", body);
 
     if (!body?.message) {
-      return new Response(JSON.stringify({ reply: 'No message provided' }), { status: 400 });
+      return res.status(400).json({ reply: "No message provided" });
     }
 
     // Build conversation history
-    const history = (body.conversation || []).map((m: any) => ({
-      role: m.sender === 'user' ? 'user' : 'assistant',
-      content: m.content
+    const history = (body.conversation || []).map((m) => ({
+      role: m.sender === "user" ? "user" : "assistant",
+      content: m.content,
     }));
 
-    // Add current message at the end
-    history.push({ role: 'user', content: body.message });
+    history.push({ role: "user", content: body.message });
 
     // Category-specific system prompt
     const systemPrompt =
-      body.category === '2'
-        ? 'You are a helpful admissions assistant specializing in personal statements.'
-        : 'You are a helpful admissions assistant.';
+      body.category === "2"
+        ? "You are a helpful admissions assistant specializing in personal statements."
+        : "You are a helpful admissions assistant.";
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_KEY, // <-- secure, from Vercel env vars
+    });
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...history
-      ],
-      max_tokens: 300
+      model: "gpt-4o-mini",
+      messages: [{ role: "system", content: systemPrompt }, ...history],
+      max_tokens: 300,
     });
 
     const reply =
       completion.choices?.[0]?.message?.content ||
       "Sorry, I couldn't process your message.";
 
-    console.log('[API] Reply sent:', reply);
+    console.log("[API] Reply sent:", reply);
 
-    return new Response(JSON.stringify({ reply }), {
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return res.status(200).json({ reply });
   } catch (error) {
-    console.error('[API] Error:', error);
-    return new Response(JSON.stringify({ reply: 'Error processing message' }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 500
-    });
+    console.error("[API] Error:", error);
+    return res.status(500).json({ reply: "Error processing message" });
   }
-};
+}
