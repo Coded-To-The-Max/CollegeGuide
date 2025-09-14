@@ -58,7 +58,7 @@ const distPath = path.join(__dirname, 'dist');
 app.use(express.static(distPath));
 
 // SPA fallback for all other routes
-app.get('/:path(.*)', (req, res) => {
+app.get('*', (req, res) => {
   const indexPath = path.join(distPath, 'index.html');
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
