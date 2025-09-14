@@ -14,7 +14,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ reply: 'No message provided' });
     }
 
-    // Build conversation history
     const history = (body.conversation || []).map((m: any) => ({
       role: m.sender === 'user' ? 'user' : 'assistant',
       content: m.content,
@@ -22,14 +21,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     history.push({ role: 'user', content: body.message });
 
-    // Category-specific system prompt
     const systemPrompt =
       body.category === '2'
         ? 'You are a helpful admissions assistant specializing in personal statements.'
         : 'You are a helpful admissions assistant.';
 
     const openai = new OpenAI({
-      apiKey: process.env.OPENAI_KEY, // <- must be set in Vercel dashboard
+      apiKey: process.env.OPENAI_KEY,
     });
 
     const completion = await openai.chat.completions.create({
