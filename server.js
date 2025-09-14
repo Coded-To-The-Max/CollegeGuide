@@ -2,8 +2,15 @@ import express from 'express';
 import cors from 'cors';
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import fs from 'fs';
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 app.use(cors());
@@ -19,6 +26,7 @@ console.log('OpenAI API Key loaded.');
 
 const openai = new OpenAI({ apiKey: process.env.VITE_AI_API_KEY });
 
+// OpenAI API route
 app.post('/api/openai', async (req, res) => {
   try {
     const { message } = req.body;
@@ -27,7 +35,7 @@ app.post('/api/openai', async (req, res) => {
     console.log('Received message:', message);
 
     const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo', // Use a model your account definitely supports
+      model: 'gpt-3.5-turbo', 
       messages: [
         { role: 'system', content: 'You are a helpful admissions assistant.' },
         { role: 'user', content: message },
@@ -45,5 +53,20 @@ app.post('/api/openai', async (req, res) => {
   }
 });
 
-const port = 5174;
-app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+// Serve Vite build (dist folder)
+const distPath = path.join(__dirname, 'dist');
+app.use(express.static(distPath));
+
+// SPA fallback for all other routes
+app.get('*', (req, res) => {
+  const indexPath = path.join(distPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('index.html not found');
+  }
+});
+
+// Dynamic port for Heroku
+const PORT = process.env.PORT || 5174;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
