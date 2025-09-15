@@ -37,7 +37,6 @@ function App() {
   const [currentChat, setCurrentChat] = useState<string>('1');
   const [isTyping, setIsTyping] = useState(false);
 
-  // Load user data from Supabase
   const loadUserData = async (userId: string) => {
     try {
       const { data: collegesData, error: collegesError } = await supabase
@@ -196,7 +195,6 @@ function App() {
     }, 150);
   };
 
-  // Chat AI integration
   const handleSendMessage = async (message: string) => {
     if (!currentChat || !message.trim() || !user) return;
 
