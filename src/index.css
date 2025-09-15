@@ -4,16 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Material Design inspired styles */
 
 body {
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-/* --- Ripple, Elevation, Transitions, Scrollbars, Animations, Loading, etc. --- */
-/* Keep all your existing code here */
 
-/* Graduation Cap Bounce + Staggered Fade-In Animations */
 @keyframes bounce-slow {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
@@ -44,4 +40,3 @@ body {
   animation: fade-in 1s ease-out 0.9s forwards;
 }
 
-/* --- Keep all other existing animations and styles --- */
