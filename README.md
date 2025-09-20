@@ -3,7 +3,7 @@
 [![Project Status](https://img.shields.io/badge/status-active-success.svg)](https://github.com/username/CollegeGuide)
 [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/username/CollegeGuide/blob/main/LICENSE)
 
-CollegeGuide AI is a dynamic web application designed to empower high school students in their college application journey. Through an intuitive, AI-powered chat interface, students can explore potential colleges, understand admission requirements, and receive personalized guidance. Built as both a functional prototype and a learning project, CollegeGuide AI showcases full-stack development expertise, robust authentication, and seamless AI integration.
+CollegeGuide is a dynamic web application designed to empower high school students in their college application journey. Through an intuitive, AI-powered chat interface, students can explore potential colleges, understand admission requirements, and receive personalized guidance. Built as both a functional prototype and a learning project, CollegeGuide showcases full-stack development expertise, robust authentication, and seamless AI integration.
 
 ## Features
 
