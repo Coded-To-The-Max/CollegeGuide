@@ -52,4 +52,4 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 
 ## Contact
 
-mrcalculator101@gmail.com
+maxliyang.zhou@gmail.com
